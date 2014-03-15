@@ -16,6 +16,12 @@ function emptyList() {
     }
 }
 
+function refresh() {
+    chrome.tabs.query({currentWindow: true, active: true}, function(tabs) {
+        chrome.tabs.reload(tabs[0].id);
+    })
+}
+
 function addTitle() {
     var titles = JSON.parse(localStorage["list"] || "null") || [];
     var input = document.getElementById('title').value;
@@ -23,6 +29,8 @@ function addTitle() {
     localStorage["list"] = JSON.stringify(titles);
     emptyList();
     buildList();
+    
+    refresh();
 }
 
 function removeTitle(e) {
@@ -37,6 +45,8 @@ function removeTitle(e) {
         var index = titles.indexOf(nodeText);
         titles.splice(index, 1);
         localStorage["list"] = JSON.stringify(titles);
+
+        refresh();
     }
 }
 
@@ -49,6 +59,7 @@ function checkBox() {
     }
     toggle.addEventListener("change", function() {
         localStorage["toggle"] = toggle.checked;
+        refresh();
 });
 }
 
