@@ -1,0 +1,30 @@
+{
+    "manifest_version": 2,
+
+    "name": "No spoilers",
+    "version": "1.0",
+    "description": "This extension blocks spoilers.",
+    "icons": {
+        "16" : "icon.png"
+    },
+
+    "background": {
+        "scripts": ["background.js"]
+    },
+
+    "content_scripts": [
+        {
+            "matches": ["http://*/*", "https://*/*"],
+            "js": ["content.js", "jquery-2.1.0.min.js"]
+        }
+    ],
+
+    "permissions": [
+        "tabs", "http://*/*", "https://*/*"
+    ],
+    "browser_action": {
+        "default_title" : "Block spoilers!",
+        "default_icon": "icon.png",
+        "default_popup": "popup.html"
+    }
+}
