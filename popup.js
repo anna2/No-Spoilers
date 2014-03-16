@@ -17,8 +17,10 @@ function emptyList() {
 }
 
 function updateDOM() {
-    chrome.runtime.sendMessage({method: "updateDOM"}, function(response){}
-)}
+    if (localStorage["toggle"] == "true") {
+        chrome.runtime.sendMessage({method: "updateDOM"}, function(response){})
+    }
+}
 
 function addTitle() {
     var titles = JSON.parse(localStorage["blockList"] || "null") || [];
@@ -39,17 +41,23 @@ function removeTitle(e) {
         node.remove();
 
         // remove title from master list
-        var titles = JSON.parse(localStorage["list"] || "null") || [];
+        var titles = JSON.parse(localStorage["blockList"] || "null") || [];
         var index = titles.indexOf(nodeText);
         titles.splice(index, 1);
         localStorage["blockList"] = JSON.stringify(titles);
-        
-        //update webpage to unblock matching nodes
-        localStorage["showList"] = JSON.stringify([nodeText]);
-        console.log(nodeText);
+
+        //update showList
+        var show = JSON.parse(localStorage["showList"] || "null") || [];
+        show.push(nodeText);
+        localStorage["showList"] = JSON.stringify(show);
+
         updateDOM();
         
     }
+}
+
+function off() {
+    chrome.runtime.sendMessage({method: "off"}, function(response){})
 }
 
 function checkBox() {
@@ -61,7 +69,11 @@ function checkBox() {
     }
     toggle.addEventListener("change", function() {
         localStorage["toggle"] = toggle.checked;
-        chrome.tabs.reload;
+        if (localStorage["toggle"] == "true") {
+           updateDOM();
+        } else {
+            off();
+        }
 });
 }
 

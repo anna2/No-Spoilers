@@ -9,15 +9,9 @@
     },
 
     "background": {
-        "scripts": ["background.js"]
+        "scripts": ["background.js"],
+        "persistent": false
     },
-
-    // "content_scripts": [
-    //     {
-    //         "matches": ["http://*/*", "https://*/*"],
-    //         "js": ["content.js", "jquery-2.1.0.min.js"]
-    //     }
-    // ],
 
     "permissions": [
         "tabs", "http://*/*", "https://*/*"

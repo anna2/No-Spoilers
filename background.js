@@ -13,10 +13,15 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     if (request.method == "getLocalStorage") {
         sendResponse({data: localStorage[request.key]});
     } else if (request.method == "updateDOM") {
-        if (localStorage["toggle"] == "true") {
-            chrome.tabs.executeScript(null, {"file": "jquery-2.1.0.min.js"});
-            chrome.tabs.executeScript(null, {"file": "content.js"});
-        }
+        chrome.tabs.executeScript(null, {"file": "jquery-2.1.0.min.js"});
+        chrome.tabs.executeScript(null, {"file": "content.js"});
+        sendResponse({});
+    } else if (request.method == "off") {
+        chrome.tabs.executeScript(null, {"file": "jquery-2.1.0.min.js"});
+        chrome.tabs.executeScript(null, {"file": "content_off.js"});
+        sendResponse({});
+    } else if (request.method == "resetShowList") {
+        localStorage["showList"] = null;
     } else {
         sendResponse({});
         }
