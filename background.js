@@ -5,22 +5,18 @@
 
 chrome.runtime.onInstalled.addListener(function() {
     localStorage["toggle"] = true;
-    localStorage["list"] = null;
+    localStorage["blockList"] = null;
+    localStorage["showList"] = null;
 })
-
-
-chrome.tabs.onUpdated.addListener(function(id,info, tab) {
-    console.log("update " + localStorage["toggle"])
-    if (localStorage["toggle"] == "true") {
-        chrome.tabs.executeScript(null, {"file": "content.js"});
-        console.log("execute");
-    }
-})
-
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     if (request.method == "getLocalStorage") {
         sendResponse({data: localStorage[request.key]});
+    } else if (request.method == "updateDOM") {
+        if (localStorage["toggle"] == "true") {
+            chrome.tabs.executeScript(null, {"file": "jquery-2.1.0.min.js"});
+            chrome.tabs.executeScript(null, {"file": "content.js"});
+        }
     } else {
         sendResponse({});
         }

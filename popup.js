@@ -1,6 +1,6 @@
 function buildList() {
     var list = document.getElementById('list');
-    var titles = JSON.parse(localStorage["list"] || "null") || [];
+    var titles = JSON.parse(localStorage["blockList"] || "null") || [];
     for (i = 0; i < titles.length; ++i) {
         var newTitle = document.createElement('LI');
         newTitle.id = i;
@@ -16,37 +16,39 @@ function emptyList() {
     }
 }
 
-function refresh() {
-    chrome.tabs.query({currentWindow: true, active: true}, function(tabs) {
-        chrome.tabs.reload(tabs[0].id);
-    })
-}
+function updateDOM() {
+    chrome.runtime.sendMessage({method: "updateDOM"}, function(response){}
+)}
 
 function addTitle() {
-    var titles = JSON.parse(localStorage["list"] || "null") || [];
+    var titles = JSON.parse(localStorage["blockList"] || "null") || [];
     var input = document.getElementById('title').value;
     titles.push(input);
-    localStorage["list"] = JSON.stringify(titles);
+    localStorage["blockList"] = JSON.stringify(titles);
     emptyList();
     buildList();
-    
-    refresh();
+    updateDOM();
 }
+
 
 function removeTitle(e) {
     if (e.target.id) {
-        // remove node from DOM
+        // remove node from popup DOM
         node = document.getElementById(e.target.id);
-        nodeText = document.getElementById(e.target.id).value;
+        nodeText = document.getElementById(e.target.id).textContent;
         node.remove();
 
         // remove title from master list
         var titles = JSON.parse(localStorage["list"] || "null") || [];
         var index = titles.indexOf(nodeText);
         titles.splice(index, 1);
-        localStorage["list"] = JSON.stringify(titles);
-
-        refresh();
+        localStorage["blockList"] = JSON.stringify(titles);
+        
+        //update webpage to unblock matching nodes
+        localStorage["showList"] = JSON.stringify([nodeText]);
+        console.log(nodeText);
+        updateDOM();
+        
     }
 }
 
@@ -59,7 +61,7 @@ function checkBox() {
     }
     toggle.addEventListener("change", function() {
         localStorage["toggle"] = toggle.checked;
-        refresh();
+        chrome.tabs.reload;
 });
 }
 
