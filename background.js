@@ -36,10 +36,10 @@ function toggle() {
     chrome.storage.sync.get("toggle", function(data){
         if (data["toggle"] == true) {
             chrome.tabs.executeScript(null, {"file": "jquery-2.1.0.min.js"});
-            //chrome.tabs.executeScript(null, {"file": "show_all.js"});
-            chrome.tabs.executeScript(null, {"file": "content.js"});
+            chrome.tabs.executeScript(null, {"file": "show_all.js"});
+            //chrome.tabs.executeScript(null, {"file": "content.js"});
         } else {
-            //chrome.tabs.executeScript(null, {"file": "show_all.js"});
+            chrome.tabs.executeScript(null, {"file": "off.js"});
         }
     })
 }

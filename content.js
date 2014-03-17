@@ -6,8 +6,9 @@ function block() {
         {};
     } else {
     for (i = 0; i < blockList.length; ++i) {
-        $(":contains("+blockList[i]+"):not(:has(div))").hide();
+        $(":contains("+blockList[i]+"):not(:has(div))").addClass("noSpoilersHidden").hide();
     }
+        // $(".noSpoilersHidden").hide();
         }
 };
 
@@ -16,7 +17,7 @@ function show() {
         {};
     } else {
         for (i = 0; i < showList.length; ++i) {
-            $(":contains("+showList[i]+"):not(:has(div))").show();
+            $(":contains("+showList[i]+"):not(:has(div))").removeClass("noSpoilersHidden").show();
         }
         chrome.runtime.sendMessage({method: "resetShowList"}, function(response){})
     }
