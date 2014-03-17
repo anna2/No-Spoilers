@@ -1,11 +1,13 @@
 {
     "manifest_version": 2,
 
-    "name": "No spoilers",
+    "name": "No Spoilers",
     "version": "1.0",
-    "description": "This extension blocks spoilers.",
-    "icons": {
-        "16" : "icon.png"
+    "author": "Anna Sheaffer",
+    "description": "Block spoilers! Customize the extension to block the movies, shows, and events that matter to you.",
+    "icons": { "16" : "NS16.png",
+               "48": "NS48.png",
+               "128": "NS128.png"
     },
 
     "background": {
@@ -18,7 +20,7 @@
     ],
     "browser_action": {
         "default_title" : "Block spoilers!",
-        "default_icon": "icon.png",
+        "default_icon": "NS16.png",
         "default_popup": "popup.html"
     }
 }

@@ -13,7 +13,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
             sendResponse({data: obj[request.key]});
         })
         return true;
-    } else if (request.method == "updateDOM") {
+    } else if (request.method == "updateRules") {
         chrome.tabs.executeScript(null, {"file": "jquery-2.1.0.min.js"});
         chrome.tabs.executeScript(null, {"file": "content_on.js"});
     } else if (request.method == "off") {

@@ -23,10 +23,10 @@ function emptyList() {
 
 // Check whether extension is ON or OFF, then send message to 
 // inject appropriate content script on the current page. 
-function updateDOM() {
+function updateRules() {
     chrome.storage.sync.get("toggle", function(data){
         if (data["toggle"]  == true) {
-            chrome.runtime.sendMessage({method: "updateDOM"}, function(response){})
+            chrome.runtime.sendMessage({method: "updateRules"}, function(response){})
         } else {
             chrome.runtime.sendMessage({method: "off"}, function(response){})
         }
@@ -39,13 +39,11 @@ function addTitle() {
     chrome.storage.sync.get("blockList", function(data){
         var titles = data["blockList"] || [];
         var input = document.getElementById('title').value;
-        console.log("Inputs: " + input);
         titles.push(input);
         chrome.storage.sync.set({"blockList": titles}, function() {
-            console.log("Heere");
             emptyList();
             buildPopupList();
-            updateDOM();
+            updateRules();
         })
     })
 }
@@ -53,7 +51,7 @@ function addTitle() {
 //Called when user removes title from popup list.
 function removeTitle(e) {
     if (e.target.id) {
-        // remove node from popup DOM
+        // remove node from popup list
         node = document.getElementById(e.target.id);
         nodeText = document.getElementById(e.target.id).textContent;
         node.remove();
@@ -70,7 +68,7 @@ function removeFromBlockList(text) {
         var index = titles.indexOf(text);
         titles.splice(index, 1);
         chrome.storage.sync.set({"blockList": titles}, function() {
-           updateDOM();         //update current page
+           updateRules();         //update current page
         })
     })
 }
@@ -92,7 +90,7 @@ function checkBox() {
     //Trigger apropriate content scripts.
     input.addEventListener("change", function() {
         chrome.storage.sync.set({"toggle": input.checked}, function() {
-            updateDOM();
+            updateRules();
         })
     })
 }
