@@ -1,12 +1,14 @@
 function buildList() {
     var list = document.getElementById('list');
-    var titles = JSON.parse(localStorage["blockList"] || "null") || [];
-    for (i = 0; i < titles.length; ++i) {
-        var newTitle = document.createElement('LI');
-        newTitle.id = i;
-        newTitle.appendChild(document.createTextNode(titles[i]));
-        list.appendChild(newTitle); 
-    }
+    chrome.storage.sync.get("blockList", function(data){
+        var titles = data["blockList"] || [];
+        for (i = 0; i < titles.length; ++i) {
+            var newTitle = document.createElement('LI');
+            newTitle.id = i;
+            newTitle.appendChild(document.createTextNode(titles[i]));
+            list.appendChild(newTitle); 
+        }
+    })
 }
 
 function emptyList() {
@@ -17,19 +19,24 @@ function emptyList() {
 }
 
 function updateDOM() {
-    if (localStorage["toggle"] == "true") {
-        chrome.runtime.sendMessage({method: "updateDOM"}, function(response){})
-    }
+    chrome.storage.sync.get("toggle", function(data){
+        if (data["toggle"]  == true) {
+            chrome.runtime.sendMessage({method: "updateDOM"}, function(response){})
+        }
+    })
 }
 
 function addTitle() {
-    var titles = JSON.parse(localStorage["blockList"] || "null") || [];
-    var input = document.getElementById('title').value;
-    titles.push(input);
-    localStorage["blockList"] = JSON.stringify(titles);
-    emptyList();
-    buildList();
-    updateDOM();
+    chrome.storage.sync.get("blockList", function(data){
+        var titles = data["blockList"] || [];
+        var input = document.getElementById('title').value;
+        titles.push(input);
+        chrome.storage.sync.set({"blockList": titles}, function() {
+            emptyList();
+            buildList();
+            updateDOM();
+        })
+    })
 }
 
 
@@ -41,40 +48,54 @@ function removeTitle(e) {
         node.remove();
 
         // remove title from master list
-        var titles = JSON.parse(localStorage["blockList"] || "null") || [];
-        var index = titles.indexOf(nodeText);
-        titles.splice(index, 1);
-        localStorage["blockList"] = JSON.stringify(titles);
+        chrome.storage.sync.get("blockList", function(data){
+            var titles = data["blockList"] || [];
+            var index = titles.indexOf(nodeText);
+            titles.splice(index, 1);
+            chrome.storage.sync.set({"blockList": titles}, function() {
 
-        //update showList
-        var show = JSON.parse(localStorage["showList"] || "null") || [];
-        show.push(nodeText);
-        localStorage["showList"] = JSON.stringify(show);
 
-        updateDOM();
-        
+                //update showList
+                chrome.storage.sync.get("showList", function(data) {
+                    var show = data["showList"] || [];
+                    show.push(nodeText);
+                    chrome.storage.sync.set({"showList": show}, function(){
+                        updateDOM();
+                    })
+                })
+            })
+        })
     }
 }
 
 function off() {
+    console.log("In off");
     chrome.runtime.sendMessage({method: "off"}, function(response){})
 }
 
 function checkBox() {
-    var toggle = document.getElementById('toggle');
-    if (localStorage["toggle"] == "true") {
-        toggle.checked = true;
-    } else {
-        toggle.checked = false;
-    }
-    toggle.addEventListener("change", function() {
-        localStorage["toggle"] = toggle.checked;
-        if (localStorage["toggle"] == "true") {
-           updateDOM();
+    console.log("in checkbox");
+    var input = document.getElementById('toggle');
+    chrome.storage.sync.get("toggle", function(data){
+        if (data["toggle"] == true) {
+            input.checked = true;
         } else {
-            off();
+            input.checked = false;
         }
-});
+    })
+    input.addEventListener("change", function() {
+        console.log("change!");
+        chrome.storage.sync.set({"toggle": input.checked}, function() {
+            if (input.checked == true) {
+                updateDOM();
+                console.log("true!");
+            } else {
+                off();
+                console.log("false~");
+
+            }
+        })
+    })
 }
 
 document.addEventListener('DOMContentLoaded', function() {

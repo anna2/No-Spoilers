@@ -1,4 +1,5 @@
-//call show() on every element of blockList
+// This content script is injected when extension is turned off.
+// Call show() on every element of blockList
 
 var showList = [];
 
@@ -15,7 +16,7 @@ function show() {
 
 function moveBlockToShow() {
     chrome.runtime.sendMessage({method: "getLocalStorage", key: "blockList"}, function(response) {
-        showList = JSON.parse(response.data);
+        showList = response.data;
         show();
     });
 }

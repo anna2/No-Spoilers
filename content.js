@@ -24,18 +24,20 @@ function show() {
 
 function updateBlockList() {
     chrome.runtime.sendMessage({method: "getLocalStorage", key: "blockList"}, function(response) {
-        blockList = JSON.parse(response.data);
+        blockList = response.data;
+        console.log("content " + blockList);
         block();
     });
 }
 
 function updateShowList() {
     chrome.runtime.sendMessage({method: "getLocalStorage", key: "showList"}, function(response) {
-        showList = JSON.parse(response.data);
+        showList = response.data;
         show();
     });
 }
 
+console.log("on the content script");
 updateBlockList();
 updateShowList();
 
