@@ -70,21 +70,11 @@ function removeFromBlockList(text) {
         var index = titles.indexOf(text);
         titles.splice(index, 1);
         chrome.storage.sync.set({"blockList": titles}, function() {
-            addToShowList(text);             //update showList
+           updateDOM();         //update current page
         })
     })
 }
 
-//Place unblocked title on showList
-function addToShowList(text) {
-    chrome.storage.sync.get("showList", function(data) {
-        var show = data["showList"] || [];
-        show.push(text);
-        chrome.storage.sync.set({"showList": show}, function(){
-            updateDOM(); //when showList is saved, rerun content scripts
-        })
-    })
-}
 
 function checkBox() {
     //Read from storage whether extension is on or off
