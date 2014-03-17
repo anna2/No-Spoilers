@@ -1,19 +1,21 @@
 <!doctype html>
 <html>
   <head>
-    <script src="jquery-2.1.0.min.js"></script>
+    <title>No spoilers!</title>
+    <link href="popup.css" rel="stylesheet">
     <script type="text/javascript" src="popup.js"></script>
   </head>
 
   <body>
 
-    <input type="checkbox" id="toggle"/>Check the box to turn on.
+    <input type="checkbox" id="toggle"/><label>  Check to turn on.</label>
     
     <h3>Enter a title to start blocking spoilers!</h3>
+    <p> Unblock titles by clicking on them in the list. Titles are case, punctuation, and spacing sensitive.</p>
 
 
       <input type="text" name="keywords" id="title"/>
-      <button id="add">Add</button>
+      <button id="add">Block spoilers!</button>
 
 
     <ul id="list"></ul>
