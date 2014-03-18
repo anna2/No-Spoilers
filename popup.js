@@ -7,7 +7,7 @@ function buildPopupList() {
         for (i = 0; i < titles.length; ++i) {
             var newTitle = document.createElement('LI');
             newTitle.id = i;
-            newTitle.appendChild(document.createTextNode(titles[i]));
+            newTitle.innerHTML = "<img src='x.png' id='" + i + "'>  " + titles[i];
             list.appendChild(newTitle); 
         }
     })

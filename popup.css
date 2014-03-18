@@ -36,3 +36,9 @@ li {
     margin: auto;
     list-style: none;
 }
+
+li:hover {
+    color: red;
+}
+
+
